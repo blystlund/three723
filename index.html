@@ -18,7 +18,6 @@
   --text-sub: rgba(255,255,255,0.4);
   --text-med: rgba(255,255,255,0.7);
   --accent: #bf94ff;
-  --gold: #d4a96a;
   --red: #ff453a;
   --green: #30d158;
   --orange: #ff9f0a;
@@ -30,27 +29,44 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display','SF Pro Text',sans-serif;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
 #app{max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden}
-#content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(90px + var(--safe-bottom));scrollbar-width:none}
+#content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(100px + var(--safe-bottom));scrollbar-width:none}
 #content::-webkit-scrollbar{display:none}
 
 /* ── FAB ── */
-#fab-area{position:fixed;bottom:calc(24px + var(--safe-bottom));left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;flex-direction:column;align-items:center;z-index:200;pointer-events:none}
-#fab-menu{display:flex;flex-direction:column;gap:10px;align-items:center;margin-bottom:14px;pointer-events:all;transition:opacity 0.25s,transform 0.25s}
-#fab-menu.hidden{opacity:0;transform:translateY(16px);pointer-events:none}
-.fab-option{display:flex;align-items:center;gap:12px;background:rgba(44,44,46,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.12);border-radius:50px;padding:12px 20px 12px 14px;cursor:pointer;white-space:nowrap;pointer-events:all;transition:transform 0.15s,background 0.15s}
-.fab-option:active{transform:scale(0.95);background:var(--surface3)}
-.fab-option-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.fab-option-label{font-size:15px;font-weight:600;color:var(--text)}
-#fab-btn{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1;pointer-events:all;transition:transform 0.2s,background 0.2s;box-shadow:0 4px 24px rgba(0,0,0,0.6);background:var(--accent);color:#000;font-weight:300}
-#fab-btn.open{transform:rotate(45deg);background:var(--surface3);color:var(--text)}
-#fab-overlay{position:fixed;inset:0;z-index:190;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none}
-#fab-overlay.show{display:block}
+#fab-btn{position:fixed;bottom:calc(28px + var(--safe-bottom));left:50%;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1;z-index:200;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),background 0.2s;box-shadow:0 6px 28px rgba(0,0,0,0.7),0 0 0 0.5px rgba(191,148,255,0.25);background:var(--accent);color:#000;font-weight:300}
+#fab-btn.open{transform:translateX(-50%) rotate(45deg) scale(0.9);background:var(--surface2);color:var(--text)}
 
-/* ── Cards & layout ── */
+/* ── FAB Sheet ── */
+#fab-overlay{position:fixed;inset:0;z-index:190;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:none}
+#fab-overlay.show{display:block}
+#fab-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;z-index:195;transition:transform 0.38s cubic-bezier(0.32,0.72,0,1)}
+#fab-sheet.open{transform:translateX(-50%) translateY(0)}
+#fab-sheet-inner{background:rgba(20,20,22,0.98);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border-radius:26px 26px 0 0;border-top:0.5px solid rgba(255,255,255,0.1);padding:10px 12px calc(20px + var(--safe-bottom));box-shadow:0 -10px 50px rgba(0,0,0,0.7)}
+.fab-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);margin:0 auto 18px}
+.fab-sheet-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;text-align:center;margin-bottom:10px}
+.fab-row{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:16px;cursor:pointer;transition:background 0.12s}
+.fab-row:active{background:rgba(255,255,255,0.07)}
+.fab-row-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.fab-row-text{flex:1}
+.fab-row-label{font-size:16px;font-weight:500;color:var(--text)}
+.fab-row-sub{font-size:12px;color:var(--text-sub);margin-top:2px}
+.fab-row-arrow{color:rgba(255,255,255,0.2);font-size:18px;font-weight:300}
+.fab-divider{height:0.5px;background:rgba(255,255,255,0.06);margin:2px 14px}
+
+/* ── Layout ── */
 .top-pad{height:calc(var(--safe-top) + 8px)}
-.fade-in{animation:fadeIn 0.22s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.card{background:var(--surface);border-radius:20px;border:0.5px solid var(--border);overflow:hidden}
+.fade-in{animation:fadeIn 0.2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Back header ── */
+/* Two-button header: back-left (‹) and home-right (⌂) */
+.nav-row{display:flex;align-items:center;gap:10px;padding:calc(var(--safe-top) + 8px) 16px 16px}
+.nav-btn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:18px;line-height:1;flex-shrink:0;transition:background 0.15s}
+.nav-btn:active{background:var(--surface3)}
+.nav-title{flex:1;font-size:17px;font-weight:600;color:var(--text);text-align:center}
+.nav-spacer{width:34px;flex-shrink:0} /* balances right side when no home btn needed */
+
+/* ── Cards ── */
 .insight-card{background:var(--grad);border-radius:22px;border:0.5px solid rgba(191,148,255,0.2);padding:20px;margin:0 16px 12px;position:relative;overflow:hidden}
 .insight-card::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(circle,rgba(191,148,255,0.12) 0%,transparent 70%);pointer-events:none}
 .insight-label{font-size:13px;font-weight:600;color:rgba(191,148,255,0.8);letter-spacing:0.3px;margin-bottom:14px}
@@ -58,24 +74,16 @@ html,body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF P
 .insight-num{font-size:44px;font-weight:300;color:var(--text);line-height:1;letter-spacing:-2px}
 .insight-num-label{font-size:12px;color:var(--text-sub);margin-top:4px}
 .insight-stat-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-med);margin-bottom:8px}
-
-/* ── Back header ── */
-.back-row{display:flex;align-items:center;gap:10px;padding:calc(var(--safe-top) + 8px) 20px 16px}
-.back-btn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:20px;line-height:1;flex-shrink:0}
-.back-title{font-size:17px;font-weight:600;color:var(--text)}
-
-/* ── Action cards ── */
-.action-card{background:var(--surface);border-radius:18px;border:0.5px solid var(--border);padding:18px 20px;margin:0 16px 10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform 0.15s,background 0.15s}
-.action-card:active{transform:scale(0.97);background:var(--surface2)}
-.action-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-
-/* ── Streak ── */
 .streak-card{background:var(--surface);border-radius:20px;border:0.5px solid var(--border);padding:18px 20px;margin:0 16px 12px}
 .streak-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .streak-pip{height:28px;border-radius:7px;margin-bottom:4px;transition:background 0.3s}
 .streak-pip.filled{background:var(--accent)}
 .streak-pip.empty{background:var(--surface2)}
 .streak-pip.today{outline:1.5px solid var(--accent)}
+.action-card{background:var(--surface);border-radius:18px;border:0.5px solid var(--border);padding:18px 20px;margin:0 16px 10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform 0.15s,background 0.15s}
+.action-card:active{transform:scale(0.97);background:var(--surface2)}
+.action-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.card{background:var(--surface);border-radius:20px;border:0.5px solid var(--border);overflow:hidden}
 
 /* ── Buttons ── */
 .btn-primary{width:100%;padding:17px;border-radius:16px;background:var(--accent);border:none;color:#000;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s,transform 0.15s}
@@ -85,6 +93,10 @@ html,body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF P
 .btn-record.recording{background:rgba(255,69,58,0.08);border-color:rgba(255,69,58,0.3);color:var(--red)}
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.add-dashed{width:100%;padding:16px;border-radius:16px;background:transparent;border:1.5px dashed var(--surface3);color:var(--text-sub);font-size:14px;cursor:pointer;font-family:inherit;transition:all 0.2s}
+.add-dashed:active{border-color:var(--accent);color:var(--accent)}
+.copy-btn{width:100%;padding:15px;border-radius:14px;background:var(--surface2);border:0.5px solid var(--border);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:14px;transition:all 0.2s}
+.copy-btn.copied{background:rgba(48,209,88,0.1);border-color:rgba(48,209,88,0.25);color:var(--green)}
 
 /* ── Inputs ── */
 .journal-input{width:100%;min-height:180px;padding:18px;border-radius:16px;background:var(--surface);border:0.5px solid var(--border);color:var(--text);font-size:16px;line-height:1.65;resize:none;outline:none;font-family:inherit;caret-color:var(--accent)}
@@ -95,37 +107,42 @@ html,body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF P
 .text-input:focus{border-color:rgba(191,148,255,0.3)}
 .select-field{width:100%;padding:14px 40px 14px 16px;border-radius:14px;background:var(--surface);border:0.5px solid var(--border);color:var(--text);font-size:15px;font-family:inherit;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;outline:none}
 
-/* ── Bible chapters ── */
+/* ── Bible ── */
 .mode-toggle{display:flex;background:var(--surface2);border-radius:12px;padding:3px}
 .mode-btn{flex:1;padding:9px 0;border-radius:10px;border:none;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:inherit}
 .mode-btn.active{background:var(--surface);color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.4)}
 .mode-btn:not(.active){background:transparent;color:var(--text-sub)}
 .ch-btn{width:44px;height:44px;border-radius:11px;border:0.5px solid var(--border);background:var(--surface);color:var(--text-med);font-size:14px;cursor:pointer;transition:all 0.15s;font-family:inherit}
-.ch-btn.active{background:rgba(191,148,255,0.15);border-color:rgba(191,148,255,0.4);color:var(--accent);font-weight:600}
 .ch-btn.logged{background:rgba(48,209,88,0.12);border-color:rgba(48,209,88,0.3);color:var(--green);font-weight:600}
-.ch-btn:active{transform:scale(0.9)}
+.ch-btn:not(.logged):active{transform:scale(0.9)}
 .mark-btn{padding:7px 16px;border-radius:9px;background:rgba(191,148,255,0.1);border:0.5px solid rgba(191,148,255,0.25);color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 .unmark-btn{padding:7px 16px;border-radius:9px;background:rgba(255,69,58,0.08);border:0.5px solid rgba(255,69,58,0.2);color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.mcheyne-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--border)}
+.mcheyne-row:last-child{border-bottom:none}
+.wisdom-card{background:var(--surface);border-radius:18px;border:0.5px solid var(--border);padding:18px 20px;margin-bottom:16px}
+.wisdom-inputs{display:flex;gap:10px;margin:12px 0}
+.wisdom-inputs>div{flex:1}
+.wisdom-inputs label{font-size:12px;color:var(--text-sub);display:block;margin-bottom:5px}
+.wisdom-btns{display:flex;gap:8px}
+.wisdom-mark-btn{flex:1;padding:11px 0;border-radius:10px;background:var(--surface2);border:0.5px solid var(--border);color:var(--text-med);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
 
-/* ── Progress bar ── */
+/* ── Progress ── */
 .progress-track{height:8px;border-radius:8px;background:var(--surface2);position:relative;overflow:visible;margin-bottom:6px}
 .progress-fill{height:100%;border-radius:8px;position:relative;z-index:1;transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1),background 0.5s}
-.progress-fill.flashing{animation:flashRed 0.6s ease-in-out infinite}
-@keyframes flashRed{0%,100%{opacity:1}50%{opacity:0.3}}
 .distraction-tick{position:absolute;top:-4px;width:2px;height:16px;background:var(--red);border-radius:1px;opacity:0.7;z-index:2}
+@keyframes flashRed{0%,100%{opacity:1}50%{opacity:0.25}}
+@keyframes borderPulse{0%,100%{border-color:rgba(255,69,58,0.6)}50%{border-color:rgba(255,69,58,0.08)}}
 
-/* ── Project cards ── */
+/* ── Projects / Tasks ── */
 .project-card{background:var(--surface);border-radius:20px;border:0.5px solid var(--border);padding:18px 20px;margin:0 16px 10px;cursor:pointer;transition:transform 0.15s,background 0.15s}
 .project-card:active{transform:scale(0.97);background:var(--surface2)}
-
-/* ── Tasks ── */
-.task-item{display:flex;align-items:center;gap:14px;padding:14px 20px;background:var(--surface);border-radius:14px;margin-bottom:8px;border:0.5px solid var(--border)}
+.task-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface);border-radius:14px;margin-bottom:8px;border:0.5px solid var(--border)}
 .task-check{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--surface3);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:13px;color:#000;font-weight:700;font-family:inherit}
 .task-check.done{background:var(--green);border-color:var(--green)}
 .task-meta{font-size:11px;color:var(--text-sub);margin-top:2px}
 .distraction-btn-sm{padding:6px 10px;border-radius:8px;background:rgba(255,69,58,0.1);border:0.5px solid rgba(255,69,58,0.2);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 
-/* ── Distraction timer ── */
+/* ── Timer ── */
 .timer-wrap{position:relative;width:210px;height:210px;margin:0 auto}
 .timer-svg{transform:rotate(-90deg)}
 .timer-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
@@ -137,91 +154,64 @@ html,body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF P
 .log-item{padding:14px 20px;border-bottom:0.5px solid var(--border);display:flex;gap:12px;align-items:flex-start}
 .log-item:last-child{border-bottom:none}
 .log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.log-body{flex:1}
 .log-title{font-size:14px;color:var(--text);line-height:1.4}
 .log-time{font-size:12px;color:var(--text-sub);margin-top:2px}
 
 /* ── Section label ── */
 .sec-label{font-size:13px;color:var(--text-sub);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;padding:20px 20px 8px}
 
-/* ── Modal sheet ── */
+/* ── Sheet (new project / task) ── */
 .sheet-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center}
-.sheet{background:var(--surface);border-radius:24px 24px 0 0;padding:20px 20px calc(20px + var(--safe-bottom));width:100%;max-width:430px;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.sheet{background:var(--surface);border-radius:24px 24px 0 0;padding:20px 20px calc(24px + var(--safe-bottom));width:100%;max-width:430px;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--surface3);margin:0 auto 20px}
 .sheet-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px}
 
-/* ── Number input small ── */
-.num-input{width:70px;padding:10px 12px;border-radius:11px;border:0.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;font-family:inherit;outline:none;text-align:center}
-
-/* ── Add dashed ── */
-.add-dashed{width:100%;padding:16px;border-radius:16px;background:transparent;border:1.5px dashed var(--surface3);color:var(--text-sub);font-size:14px;cursor:pointer;font-family:inherit;transition:all 0.2s}
-.add-dashed:active{border-color:var(--accent);color:var(--accent)}
-
-/* ── Mcheyne ── */
-.mcheyne-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--border)}
-.mcheyne-row:last-child{border-bottom:none}
-
-/* ── wisdom card ── */
-.wisdom-card{background:var(--surface);border-radius:18px;border:0.5px solid var(--border);padding:18px 20px;margin-bottom:16px}
-.wisdom-inputs{display:flex;gap:10px;margin:12px 0}
-.wisdom-inputs>div{flex:1}
-.wisdom-inputs label{font-size:12px;color:var(--text-sub);display:block;margin-bottom:5px}
-.wisdom-btns{display:flex;gap:8px}
-.wisdom-mark-btn{flex:1;padding:11px 0;border-radius:10px;background:var(--surface2);border:0.5px solid var(--border);color:var(--text-med);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
-
-/* ── Script ── */
+/* ── Misc ── */
+.verse-quote{font-size:14px;font-style:italic;color:var(--text-sub);line-height:1.6;margin-bottom:20px}
 .script-body{background:var(--surface);border:0.5px solid var(--border);border-radius:18px;padding:20px;font-size:15px;line-height:1.8;color:var(--text-med);white-space:pre-wrap;word-break:break-word}
-.copy-btn{width:100%;padding:15px;border-radius:14px;background:var(--surface2);border:0.5px solid var(--border);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:14px}
-.copy-btn.copied{background:rgba(48,209,88,0.1);border-color:rgba(48,209,88,0.25);color:var(--green)}
 .loading-state{text-align:center;padding:60px 20px;color:var(--text-sub)}
 .loading-icon{font-size:36px;margin-bottom:16px;animation:spin 3s linear infinite}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.verse-quote{font-size:14px;font-style:italic;color:var(--text-sub);line-height:1.6;margin-bottom:20px}
-
-/* ── distraction flashing border ── */
-@keyframes borderFlash{0%,100%{border-color:rgba(255,69,58,0.5)}50%{border-color:rgba(255,69,58,0.05)}}
-.distraction-active{animation:borderFlash 0.8s ease-in-out infinite!important}
 </style>
 </head>
 <body>
 <div id="app">
   <div id="content"></div>
-  <!-- FAB -->
   <div id="fab-overlay" onclick="closeFab()"></div>
-  <div id="fab-area">
-    <div id="fab-menu" class="hidden"></div>
-    <button id="fab-btn" onclick="toggleFab()">+</button>
+  <div id="fab-sheet">
+    <div id="fab-sheet-inner">
+      <div class="fab-handle"></div>
+      <div class="fab-sheet-label">Quick Actions</div>
+      <div id="fab-sheet-rows"></div>
+    </div>
   </div>
+  <button id="fab-btn" onclick="toggleFab()">+</button>
 </div>
 
 <script>
-// ── Bible data ─────────────────────────────────────────────────────────
+// ── Bible data ──────────────────────────────────────────────────────────
 const OT=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'];
 const NT=['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
 const CHAPTERS={Genesis:50,Exodus:40,Leviticus:27,Numbers:36,Deuteronomy:34,Joshua:24,Judges:21,Ruth:4,'1 Samuel':31,'2 Samuel':24,'1 Kings':22,'2 Kings':25,'1 Chronicles':29,'2 Chronicles':36,Ezra:10,Nehemiah:13,Esther:10,Job:42,Psalms:150,Proverbs:31,Ecclesiastes:12,'Song of Solomon':8,Isaiah:66,Jeremiah:52,Lamentations:5,Ezekiel:48,Daniel:12,Hosea:14,Joel:3,Amos:9,Obadiah:1,Jonah:4,Micah:7,Nahum:3,Habakkuk:3,Zephaniah:3,Haggai:2,Zechariah:14,Malachi:4,Matthew:28,Mark:16,Luke:24,John:21,Acts:28,Romans:16,'1 Corinthians':16,'2 Corinthians':13,Galatians:6,Ephesians:6,Philippians:4,Colossians:4,'1 Thessalonians':5,'2 Thessalonians':3,'1 Timothy':6,'2 Timothy':4,Titus:3,Philemon:1,Hebrews:13,James:5,'1 Peter':5,'2 Peter':3,'1 John':5,'2 John':1,'3 John':1,Jude:1,Revelation:22};
 
-// ── State ─────────────────────────────────────────────────────────────
+// ── State ───────────────────────────────────────────────────────────────
 const S={
-  view:'home', // home | journal | bible | script | projectList | projectDetail | distractionTimer | log
+  view:'home',
+  prevView:'home', // tracks where back-btn on script should go
   journalText:'',script:'',scriptLoading:false,recording:false,
   bibleMode:'book',selectedBook:'Genesis',selectedChapter:1,psalmCh:1,provCh:1,bibleLog:{},
   projects:[],activeProjectId:null,activeTaskId:null,
   timerSecs:600,timerRunning:false,timerDone:false,distractionNote:'',
-  activityLog:[],
-  fabOpen:false,
-  recognition:null,
-  newProjName:'',newProjHours:2,
-  newTaskText:'',newTaskHours:0.5,
-  showNewTask:false,showNewProj:false,
+  activityLog:[],fabOpen:false,recognition:null,
 };
 let timerInterval=null;
 
-// ── Persist ───────────────────────────────────────────────────────────
-function save(){try{localStorage.setItem('ms2_j',S.journalText);localStorage.setItem('ms2_bl',JSON.stringify(S.bibleLog));localStorage.setItem('ms2_p',JSON.stringify(S.projects));localStorage.setItem('ms2_log',JSON.stringify(S.activityLog));}catch(e){}}
-function load(){try{S.journalText=localStorage.getItem('ms2_j')||'';S.bibleLog=JSON.parse(localStorage.getItem('ms2_bl')||'{}');S.projects=JSON.parse(localStorage.getItem('ms2_p')||'[]');S.activityLog=JSON.parse(localStorage.getItem('ms2_log')||'[]');}catch(e){}}
+// ── Persist ─────────────────────────────────────────────────────────────
+function save(){try{localStorage.setItem('ms3_j',S.journalText);localStorage.setItem('ms3_bl',JSON.stringify(S.bibleLog));localStorage.setItem('ms3_p',JSON.stringify(S.projects));localStorage.setItem('ms3_log',JSON.stringify(S.activityLog));}catch(e){}}
+function load(){try{S.journalText=localStorage.getItem('ms3_j')||'';S.bibleLog=JSON.parse(localStorage.getItem('ms3_bl')||'{}');S.projects=JSON.parse(localStorage.getItem('ms3_p')||'[]');S.activityLog=JSON.parse(localStorage.getItem('ms3_log')||'[]');}catch(e){}}
 
-// ── Helpers ───────────────────────────────────────────────────────────
+// ── Helpers ─────────────────────────────────────────────────────────────
 function todayKey(){return new Date().toISOString().split('T')[0]}
 function todayLabel(){return new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}
 function fmt(s){return`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`}
@@ -229,13 +219,11 @@ function greet(){const h=new Date().getHours();return h<12?'Good morning':h<17?'
 function getProject(){return S.projects.find(p=>p.id===S.activeProjectId)}
 function updateProject(fn){S.projects=S.projects.map(p=>p.id===S.activeProjectId?fn(p):p);save()}
 function progressPct(p){
-  // time-based: completedMinutes / totalMinutes
   const total=p.tasks.reduce((a,t)=>a+(t.minutes||30),0);
   if(!total)return 0;
   const completed=p.tasks.filter(t=>t.done).reduce((a,t)=>a+(t.minutes||30),0);
-  const distrPenalty=(p.distractions||[]).length*5; // 5min penalty per distraction
-  const raw=Math.max(0,(completed-distrPenalty)/total*100);
-  return Math.round(Math.min(100,raw));
+  const penalty=(p.distractions||[]).length*5;
+  return Math.round(Math.min(100,Math.max(0,(completed-penalty)/total*100)));
 }
 function progressColor(pct){return pct>66?'var(--green)':pct>33?'var(--accent)':'var(--orange)'}
 function weekDays(){
@@ -244,47 +232,65 @@ function weekDays(){
   return days;
 }
 function addLog(type,label,color){
-  S.activityLog.unshift({type,label,color,time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),date:todayKey(),ts:Date.now()});
-  if(S.activityLog.length>200)S.activityLog.pop();
+  S.activityLog.unshift({type,label,color,time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),date:todayKey()});
+  if(S.activityLog.length>300)S.activityLog.pop();
   save();
 }
+function goHome(){clearInterval(timerInterval);S.timerRunning=false;S.view='home';render()}
+function goBack(view){S.view=view;render()}
 
-// ── FAB ───────────────────────────────────────────────────────────────
-const FAB_OPTIONS=[
-  {id:'journal',icon:'✍️',label:'Journal Entry',bg:'linear-gradient(135deg,#2d1f5e,#1a1040)'},
-  {id:'project',icon:'📁',label:'New Project',bg:'linear-gradient(135deg,#1a3040,#0d1f2d)'},
-  {id:'task',icon:'✓',label:'Add Task',bg:'linear-gradient(135deg,#1a2a1a,#0d1a0d)'},
-  {id:'distraction',icon:'⚡',label:'Log Distraction',bg:'linear-gradient(135deg,#3a1a1a,#200d0d)'},
+// ── NAV ROW helper ──────────────────────────────────────────────────────
+// backView: where ‹ goes. showHome: whether to show ⌂ button on right.
+function navRow(title,backView,showHome=true){
+  const homeBtn=showHome?`<button class="nav-btn" onclick="goHome()" title="Home">⌂</button>`:`<div class="nav-spacer"></div>`;
+  return`<div class="nav-row">
+    <button class="nav-btn" onclick="goBack('${backView}')"style="font-size:22px">‹</button>
+    <div class="nav-title">${title}</div>
+    ${homeBtn}
+  </div>`;
+}
+
+// ── FAB ─────────────────────────────────────────────────────────────────
+const FAB_OPTS=[
+  {id:'journal',icon:'✍️',label:'Morning Journal',sub:'Pray, reflect & record',bg:'linear-gradient(135deg,#2d1f5e,#1a1040)'},
+  {id:'project',icon:'📁',label:'New Project',sub:'Start tracking a project',bg:'linear-gradient(135deg,#1a3040,#0d1f2d)'},
+  {id:'task',icon:'✓',label:'Add Task',sub:'Add to an existing project',bg:'linear-gradient(135deg,#1a2a1a,#0d1a0d)'},
+  {id:'distraction',icon:'⚡',label:'Log Distraction',sub:'Start 10-min timer',bg:'linear-gradient(135deg,#3a1010,#200808)'},
 ];
 function toggleFab(){S.fabOpen=!S.fabOpen;renderFab()}
 function closeFab(){S.fabOpen=false;renderFab()}
 function renderFab(){
   const btn=document.getElementById('fab-btn');
-  const menu=document.getElementById('fab-menu');
+  const sheet=document.getElementById('fab-sheet');
   const overlay=document.getElementById('fab-overlay');
+  const rows=document.getElementById('fab-sheet-rows');
   btn.classList.toggle('open',S.fabOpen);
-  menu.classList.toggle('hidden',!S.fabOpen);
+  sheet.classList.toggle('open',S.fabOpen);
   overlay.classList.toggle('show',S.fabOpen);
-  if(S.fabOpen){
-    menu.innerHTML=FAB_OPTIONS.map(o=>`
-      <div class="fab-option" onclick="fabAction('${o.id}')">
-        <div class="fab-option-icon" style="background:${o.bg}">${o.icon}</div>
-        <span class="fab-option-label">${o.label}</span>
+  if(S.fabOpen&&rows){
+    rows.innerHTML=FAB_OPTS.map((o,i)=>`
+      ${i>0?'<div class="fab-divider"></div>':''}
+      <div class="fab-row" onclick="fabAction('${o.id}')">
+        <div class="fab-row-icon" style="background:${o.bg}">${o.icon}</div>
+        <div class="fab-row-text">
+          <div class="fab-row-label">${o.label}</div>
+          <div class="fab-row-sub">${o.sub}</div>
+        </div>
+        <div class="fab-row-arrow">›</div>
       </div>`).join('');
   }
 }
 function fabAction(id){
   closeFab();
   if(id==='journal'){S.view='journal';render()}
-  else if(id==='project'){showNewProjectSheet()}
-  else if(id==='task'){showNewTaskSheet()}
-  else if(id==='distraction'){showQuickDistractionSheet()}
+  else if(id==='project')showNewProjectSheet();
+  else if(id==='task')showNewTaskSheet();
+  else if(id==='distraction')showQuickDistractionSheet();
 }
 
-// ── Sheets ────────────────────────────────────────────────────────────
+// ── Sheets ───────────────────────────────────────────────────────────────
 function showSheet(html){
-  const existing=document.getElementById('sheet-overlay');
-  if(existing)existing.remove();
+  const ex=document.getElementById('sheet-overlay');if(ex)ex.remove();
   const div=document.createElement('div');
   div.className='sheet-overlay';div.id='sheet-overlay';
   div.innerHTML=`<div class="sheet">${html}</div>`;
@@ -297,12 +303,12 @@ function showNewProjectSheet(){
   showSheet(`
     <div class="sheet-handle"></div>
     <div class="sheet-title">New Project</div>
-    <input id="sh-proj-name" class="text-input" placeholder="Project name…" style="margin-bottom:12px;">
-    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px;">ESTIMATED HOURS</label>
-    <input id="sh-proj-hours" class="text-input" type="number" min="0.5" step="0.5" value="2" placeholder="2" style="margin-bottom:16px;">
+    <input id="sh-proj-name" class="text-input" placeholder="Project name…" style="margin-bottom:12px">
+    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px">ESTIMATED HOURS</label>
+    <input id="sh-proj-hours" class="text-input" type="number" min="0.5" step="0.5" value="2" style="margin-bottom:16px">
     <button class="btn-primary" onclick="createProject()">Create Project</button>
   `);
-  setTimeout(()=>document.getElementById('sh-proj-name')?.focus(),100);
+  setTimeout(()=>document.getElementById('sh-proj-name')?.focus(),120);
 }
 function createProject(){
   const name=document.getElementById('sh-proj-name')?.value.trim();
@@ -320,17 +326,17 @@ function showNewTaskSheet(){
     <div class="sheet-handle"></div>
     <div class="sheet-title">Add Task</div>
     ${hasProjects?`
-    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px;">PROJECT</label>
-    <select id="sh-task-proj" class="select-field" style="margin-bottom:12px;">
-      ${S.projects.map(p=>`<option value="${p.id}" ${p.id===S.activeProjectId?'selected':''}>${p.name}</option>`).join('')}
-    </select>`:'<p style="color:var(--text-sub);font-size:14px;margin-bottom:12px;">Create a project first.</p>'}
-    ${hasProjects?`
-    <input id="sh-task-text" class="text-input" placeholder="Task description…" style="margin-bottom:12px;">
-    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px;">ESTIMATED MINUTES</label>
-    <input id="sh-task-mins" class="text-input" type="number" min="5" step="5" value="30" style="margin-bottom:16px;">
-    <button class="btn-primary" onclick="createTask()">Add Task</button>`:''}
+    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px">PROJECT</label>
+    <select id="sh-task-proj" class="select-field" style="margin-bottom:12px">
+      ${S.projects.map(p=>`<option value="${p.id}"${p.id===S.activeProjectId?' selected':''}>${p.name}</option>`).join('')}
+    </select>
+    <input id="sh-task-text" class="text-input" placeholder="Task description…" style="margin-bottom:12px">
+    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px">ESTIMATED MINUTES</label>
+    <input id="sh-task-mins" class="text-input" type="number" min="5" step="5" value="30" style="margin-bottom:16px">
+    <button class="btn-primary" onclick="createTask()">Add Task</button>`
+    :'<p style="color:var(--text-sub);font-size:14px;margin-bottom:16px">Create a project first.</p><button class="btn-secondary" onclick="closeSheet()">Close</button>'}
   `);
-  setTimeout(()=>document.getElementById('sh-task-text')?.focus(),100);
+  setTimeout(()=>document.getElementById('sh-task-text')?.focus(),120);
 }
 function createTask(){
   const projId=parseInt(document.getElementById('sh-task-proj')?.value);
@@ -341,6 +347,7 @@ function createTask(){
   save();closeSheet();
   addLog('task','Task added: '+text,'var(--accent)');
   if(S.view==='projectDetail'&&S.activeProjectId===projId)render();
+  else if(S.view==='projectList')render();
 }
 
 function showQuickDistractionSheet(){
@@ -349,21 +356,21 @@ function showQuickDistractionSheet(){
     <div class="sheet-handle"></div>
     <div class="sheet-title">⚡ Log Distraction</div>
     ${hasProjects?`
-    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px;">PROJECT</label>
-    <select id="sh-dist-proj" class="select-field" style="margin-bottom:12px;">
-      ${S.projects.map(p=>`<option value="${p.id}" ${p.id===S.activeProjectId?'selected':''}>${p.name}</option>`).join('')}
+    <label style="font-size:12px;color:var(--text-sub);display:block;margin-bottom:6px">PROJECT</label>
+    <select id="sh-dist-proj" class="select-field" style="margin-bottom:12px">
+      ${S.projects.map(p=>`<option value="${p.id}"${p.id===S.activeProjectId?' selected':''}>${p.name}</option>`).join('')}
     </select>`:''}
-    <input id="sh-dist-note" class="text-input" placeholder="What distracted you? (optional)" style="margin-bottom:16px;">
-    <button class="btn-primary" style="background:var(--red);color:#fff;" onclick="quickLogDistraction()">Start 10-Min Timer ⚡</button>
+    <input id="sh-dist-note" class="text-input" placeholder="What distracted you? (optional)" style="margin-bottom:16px">
+    <button class="btn-primary" style="background:var(--red);color:#fff" onclick="quickLogDistraction()">Start 10-Min Timer ⚡</button>
   `);
-  setTimeout(()=>document.getElementById('sh-dist-note')?.focus(),100);
+  setTimeout(()=>document.getElementById('sh-dist-note')?.focus(),120);
 }
 function quickLogDistraction(){
-  const projId=parseInt(document.getElementById('sh-dist-proj')?.value)||S.activeProjectId;
+  const projId=parseInt(document.getElementById('sh-dist-proj')?.value)||S.activeProjectId||null;
   const note=document.getElementById('sh-dist-note')?.value.trim()||'Distraction';
   closeSheet();
   if(projId){
-    S.projects=S.projects.map(p=>p.id===projId?{...p,distractions:[...(p.distractions||[]),{note,time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),taskId:S.activeTaskId}]}:p);
+    S.projects=S.projects.map(p=>p.id===projId?{...p,distractions:[...(p.distractions||[]),{note,time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),taskId:null}]}:p);
     save();
   }
   addLog('distraction','⚡ '+note,'var(--red)');
@@ -377,17 +384,17 @@ function quickLogDistraction(){
   },1000);
 }
 
-// ── Claude API ────────────────────────────────────────────────────────
+// ── Claude API ────────────────────────────────────────────────────────────
 async function callClaude(system,user){
   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system,messages:[{role:'user',content:user}]})});
   const d=await r.json();
   return(d.content||[]).map(b=>b.text||'').join('\n');
 }
 
-// ── Voice ─────────────────────────────────────────────────────────────
+// ── Voice ─────────────────────────────────────────────────────────────────
 function toggleRecording(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){alert('Speech recognition not supported. Please type.');return}
+  if(!SR){alert('Speech recognition not supported in this browser. Please type your entry.');return}
   if(S.recording){S.recognition?.stop();S.recording=false;render();return}
   const rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang='en-US';
   let final='';
@@ -396,7 +403,7 @@ function toggleRecording(){
   rec.start();S.recognition=rec;S.recording=true;render();
 }
 
-// ── Bible log ─────────────────────────────────────────────────────────
+// ── Bible ─────────────────────────────────────────────────────────────────
 function toggleBibleEntry(key,label){
   const tk=todayKey();
   if(!S.bibleLog[tk])S.bibleLog[tk]=[];
@@ -407,53 +414,59 @@ function toggleBibleEntry(key,label){
 }
 function isBibleLogged(key){return !!(S.bibleLog[todayKey()]||[]).find(e=>e.key===key)}
 
-// ── Timer live update ─────────────────────────────────────────────────
+// ── Timer live ────────────────────────────────────────────────────────────
 function renderTimerLive(){
   const numEl=document.getElementById('timer-number');
   const fillEl=document.getElementById('timer-fill');
   const lblEl=document.getElementById('timer-label');
-  const R=96,circ=2*Math.PI*R;
-  const pct=(600-S.timerSecs)/600;
+  const R=96,circ=2*Math.PI*R,pct=(600-S.timerSecs)/600;
   if(numEl)numEl.textContent=fmt(S.timerSecs);
-  if(fillEl){fillEl.style.strokeDashoffset=circ-circ*pct;if(S.timerDone)fillEl.style.stroke='var(--green)';}
-  if(S.timerDone){if(numEl)numEl.style.color='var(--green)';if(lblEl)lblEl.textContent="Time's up! Back to work.";render();}
+  if(fillEl)fillEl.style.strokeDashoffset=circ-circ*pct;
+  if(S.timerDone){
+    if(fillEl)fillEl.style.stroke='var(--green)';
+    if(numEl)numEl.style.color='var(--green)';
+    if(lblEl)lblEl.textContent="Time's up!";
+    render();
+  }
 }
 
-// ── Generate script ───────────────────────────────────────────────────
+// ── Generate script ───────────────────────────────────────────────────────
 async function generateScript(){
   const text=document.getElementById('journal-ta')?.value||S.journalText;
   S.journalText=text;
   if(!text.trim()){alert('Please write or record your journal entry first.');return}
-  S.scriptLoading=true;S.morningView='script';S.script='';S.view='script';save();render();
+  S.scriptLoading=true;S.script='';S.view='script';save();render();
   try{
     S.script=await callClaude(
       'You are a thoughtful Christian content creator who turns personal devotional journal entries into warm, conversational YouTube scripts. Feel authentic, not preachy. Structure: Hook (15s), Personal story/reading (45s), Key insight (60s), Viewer application (30s), Call to action (15s). Use natural spoken language. Include [PAUSE] markers and [B-ROLL: description] suggestions. 3–4 minutes when read aloud.',
       'Turn this devotional journal entry into a YouTube script:\n\n'+text
     );
     addLog('script','YouTube script generated','var(--accent)');
-  }catch(e){S.script='Error generating script. Please check your connection and try again.'}
+  }catch(e){S.script='Error generating script. Check your connection and try again.'}
   S.scriptLoading=false;render();
 }
-
-// ── RENDER ────────────────────────────────────────────────────────────
-function render(){
-  const c=document.getElementById('content');
-  const views={
-    home:renderHome,journal:renderJournal,bible:renderBible,script:renderScript,
-    projectList:renderProjectList,projectDetail:renderProjectDetail,
-    distractionTimer:renderDistractionTimer,log:renderLog
-  };
-  c.innerHTML=(views[S.view]||renderHome)();
-  c.scrollTop=0;
-  attachListeners();
+function copyScript(){
+  navigator.clipboard.writeText(S.script).then(()=>{
+    const b=document.getElementById('copy-btn');
+    if(b){b.textContent='✓ Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='📋 Copy Script';b.classList.remove('copied')},2000)}
+  });
 }
 
-// ── HOME ──────────────────────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────────────────
+function render(){
+  const c=document.getElementById('content');
+  const map={home:renderHome,journal:renderJournal,bible:renderBible,script:renderScript,projectList:renderProjectList,projectDetail:renderProjectDetail,distractionTimer:renderDistractionTimer,log:renderLog};
+  c.innerHTML=(map[S.view]||renderHome)();
+  c.scrollTop=0;
+  document.getElementById('journal-ta')?.addEventListener('input',e=>S.journalText=e.target.value);
+}
+
+// ── HOME ──────────────────────────────────────────────────────────────────
 function renderHome(){
   const days=weekDays();const streak=days.filter(d=>d.read).length;
-  const tk=todayKey();const todayEntries=(S.bibleLog[tk]||[]).length;
-  const totalChapters=Object.values(S.bibleLog).reduce((a,v)=>a+v.length,0);
-  const activeProjects=S.projects.filter(p=>p.tasks.some(t=>!t.done)).length;
+  const tk=todayKey();const todayRead=(S.bibleLog[tk]||[]).length;
+  const totalCh=Object.values(S.bibleLog).reduce((a,v)=>a+v.length,0);
+  const activeP=S.projects.filter(p=>p.tasks.some(t=>!t.done)).length;
   return`<div class="fade-in">
   <div class="top-pad"></div>
   <div style="padding:4px 20px 20px">
@@ -465,9 +478,9 @@ function renderHome(){
     <div class="insight-grid">
       <div><div class="insight-num">${streak}</div><div class="insight-num-label">Day Streak</div></div>
       <div>
-        <div class="insight-stat-row"><span>📖</span><span>${totalChapters} chapters total</span></div>
-        <div class="insight-stat-row"><span>📅</span><span>${todayEntries} read today</span></div>
-        <div class="insight-stat-row"><span>◎</span><span>${activeProjects} active project${activeProjects!==1?'s':''}</span></div>
+        <div class="insight-stat-row">📖 <span>${totalCh} chapters total</span></div>
+        <div class="insight-stat-row">📅 <span>${todayRead} read today</span></div>
+        <div class="insight-stat-row">◎ <span>${activeP} active project${activeP!==1?'s':''}</span></div>
       </div>
     </div>
   </div>
@@ -477,41 +490,43 @@ function renderHome(){
       <span style="font-size:13px;color:var(--accent);font-weight:600">${streak}/7 🔥</span>
     </div>
     <div class="streak-days">
-      ${days.map(d=>`<div style="text-align:center"><div class="streak-pip ${d.read?'filled':'empty'} ${d.k===tk?'today':''}"></div><div style="font-size:10px;color:var(--text-sub)">${d.label}</div></div>`).join('')}
+      ${days.map(d=>`<div style="text-align:center"><div class="streak-pip ${d.read?'filled':'empty'}${d.k===tk?' today':''}"></div><div style="font-size:10px;color:var(--text-sub)">${d.label}</div></div>`).join('')}
     </div>
   </div>
   <div class="sec-label">Begin</div>
   <div class="action-card" onclick="S.view='journal';render()">
     <div class="action-icon" style="background:linear-gradient(135deg,#2d1f5e,#1a1040)">✍️</div>
     <div style="flex:1"><div style="font-size:16px;font-weight:600">Morning Journal</div><div style="font-size:13px;color:var(--text-sub);margin-top:2px">Pray · Reflect · Record</div></div>
-    <div style="color:var(--text-sub);font-size:20px">›</div>
+    <div style="color:var(--text-sub);font-size:22px">›</div>
   </div>
   <div class="action-card" onclick="S.view='bible';render()">
     <div class="action-icon" style="background:linear-gradient(135deg,#1a3040,#0d1f2d)">📖</div>
-    <div style="flex:1"><div style="font-size:16px;font-weight:600">Bible Reading</div><div style="font-size:13px;color:var(--text-sub);margin-top:2px">${todayEntries?todayEntries+' chapter'+(todayEntries>1?'s':'')+' logged':'Track today\'s reading'}</div></div>
-    <div style="color:var(--text-sub);font-size:20px">›</div>
+    <div style="flex:1"><div style="font-size:16px;font-weight:600">Bible Reading</div><div style="font-size:13px;color:var(--text-sub);margin-top:2px">${todayRead?todayRead+' chapter'+(todayRead>1?'s':'')+' logged today':'Track today\'s reading'}</div></div>
+    <div style="color:var(--text-sub);font-size:22px">›</div>
   </div>
   <div class="action-card" onclick="S.view='projectList';render()">
     <div class="action-icon" style="background:linear-gradient(135deg,#1a2a1a,#0d1a0d)">◎</div>
     <div style="flex:1"><div style="font-size:16px;font-weight:600">Deep Work</div><div style="font-size:13px;color:var(--text-sub);margin-top:2px">${S.projects.length} project${S.projects.length!==1?'s':''}</div></div>
-    <div style="color:var(--text-sub);font-size:20px">›</div>
+    <div style="color:var(--text-sub);font-size:22px">›</div>
   </div>
   <div class="action-card" onclick="S.view='log';render()">
     <div class="action-icon" style="background:linear-gradient(135deg,#2a2010,#1a1508)">📋</div>
     <div style="flex:1"><div style="font-size:16px;font-weight:600">Activity Log</div><div style="font-size:13px;color:var(--text-sub);margin-top:2px">${S.activityLog.length} entries</div></div>
-    <div style="color:var(--text-sub);font-size:20px">›</div>
+    <div style="color:var(--text-sub);font-size:22px">›</div>
   </div>
+  <div style="height:20px"></div>
   </div>`;
 }
 
-// ── JOURNAL ───────────────────────────────────────────────────────────
+// ── JOURNAL ───────────────────────────────────────────────────────────────
 function renderJournal(){
   return`<div class="fade-in">
-  <div class="back-row"><button class="back-btn" onclick="S.view='home';render()">‹</button><span class="back-title">Morning Journal</span></div>
+  ${navRow('Morning Journal','home',false)}
   <div style="padding:0 20px 20px">
     <div class="verse-quote">"Be still, and know that I am God." — Psalm 46:10</div>
-    <button class="btn-record ${S.recording?'recording':''}" onclick="toggleRecording()">
-      <span>${S.recording?'⏹':'🎙'}</span><span>${S.recording?'Stop Recording':'Record Entry'}</span>
+    <button class="btn-record${S.recording?' recording':''}" onclick="toggleRecording()">
+      <span>${S.recording?'⏹':'🎙'}</span>
+      <span>${S.recording?'Stop Recording':'Record Entry'}</span>
       ${S.recording?'<div class="pulse-dot"></div>':''}
     </button>
     <div style="height:12px"></div>
@@ -521,39 +536,45 @@ function renderJournal(){
   </div></div>`;
 }
 
-// ── SCRIPT ────────────────────────────────────────────────────────────
+// ── SCRIPT ────────────────────────────────────────────────────────────────
 function renderScript(){
-  if(S.scriptLoading)return`<div class="fade-in"><div class="back-row"><button class="back-btn" onclick="S.view='journal';render()">‹</button><span class="back-title">YouTube Script</span></div><div class="loading-state"><div class="loading-icon">✦</div><div>Crafting your devotional script…</div></div></div>`;
+  if(S.scriptLoading)return`<div class="fade-in">
+  ${navRow('YouTube Script','journal')}
+  <div class="loading-state"><div class="loading-icon">✦</div><div>Crafting your devotional script…</div></div>
+  </div>`;
   return`<div class="fade-in">
-  <div class="back-row"><button class="back-btn" onclick="S.view='journal';render()">‹</button><span class="back-title">YouTube Script</span></div>
+  ${navRow('YouTube Script','journal')}
   <div style="padding:0 16px 20px">
     <button class="copy-btn" id="copy-btn" onclick="copyScript()">📋 Copy Script</button>
     <div class="script-body">${S.script.replace(/</g,'&lt;').replace(/\[([^\]]+)\]/g,'<span style="color:var(--accent);font-style:italic">[$1]</span>')}</div>
   </div></div>`;
 }
-function copyScript(){navigator.clipboard.writeText(S.script).then(()=>{const b=document.getElementById('copy-btn');if(b){b.textContent='✓ Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='📋 Copy Script';b.classList.remove('copied')},2000)}})}
 
-// ── BIBLE ─────────────────────────────────────────────────────────────
+// ── BIBLE ─────────────────────────────────────────────────────────────────
 function renderBible(){
   const tk=todayKey();const todayEntries=S.bibleLog[tk]||[];
   const chCount=Math.min(CHAPTERS[S.selectedBook]||1,40);
   return`<div class="fade-in">
-  <div class="back-row"><button class="back-btn" onclick="S.view='home';render()">‹</button><span class="back-title">Bible Reading</span></div>
+  ${navRow('Bible Reading','home',false)}
   <div style="padding:0 16px 20px">
     <div class="mode-toggle" style="margin-bottom:20px">
-      <button class="mode-btn ${S.bibleMode==='book'?'active':''}" onclick="S.bibleMode='book';render()">Book by Book</button>
-      <button class="mode-btn ${S.bibleMode==='plan'?'active':''}" onclick="S.bibleMode='plan';render()">M'Cheyne Plan</button>
+      <button class="mode-btn${S.bibleMode==='book'?' active':''}" onclick="S.bibleMode='book';render()">Book by Book</button>
+      <button class="mode-btn${S.bibleMode==='plan'?' active':''}" onclick="S.bibleMode='plan';render()">M'Cheyne Plan</button>
     </div>
     ${S.bibleMode==='book'?`
     <div style="font-size:12px;color:var(--text-sub);font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:6px">Book</div>
     <select class="select-field" style="margin-bottom:14px" onchange="S.selectedBook=this.value;S.selectedChapter=1;render()">
-      <optgroup label="Old Testament">${OT.map(b=>`<option ${b===S.selectedBook?'selected':''}>${b}</option>`).join('')}</optgroup>
-      <optgroup label="New Testament">${NT.map(b=>`<option ${b===S.selectedBook?'selected':''}>${b}</option>`).join('')}</optgroup>
+      <optgroup label="Old Testament">${OT.map(b=>`<option${b===S.selectedBook?' selected':''}>${b}</option>`).join('')}</optgroup>
+      <optgroup label="New Testament">${NT.map(b=>`<option${b===S.selectedBook?' selected':''}>${b}</option>`).join('')}</optgroup>
     </select>
     <div style="font-size:12px;color:var(--text-sub);font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px">Chapter — tap to mark or unmark</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
-      ${Array.from({length:chCount},(_,i)=>i+1).map(n=>{const key=S.selectedBook+'-'+n;const logged=isBibleLogged(key);return`<button class="ch-btn ${logged?'logged':n===S.selectedChapter?'active':''}" onclick="S.selectedChapter=${n};toggleBibleEntry('${key}','${S.selectedBook} ${n}')">${n}</button>`}).join('')}
-      ${CHAPTERS[S.selectedBook]>40?`<input type="number" min="1" max="${CHAPTERS[S.selectedBook]}" value="${S.selectedChapter}" style="width:60px;padding:0 10px;border-radius:11px;border:0.5px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;height:44px" onchange="S.selectedChapter=parseInt(this.value)||1;const k=S.selectedBook+'-'+S.selectedChapter;toggleBibleEntry(k,S.selectedBook+' '+S.selectedChapter)">`:''}
+      ${Array.from({length:chCount},(_,i)=>i+1).map(n=>{
+        const key=S.selectedBook+'-'+n;
+        const logged=isBibleLogged(key);
+        return`<button class="ch-btn${logged?' logged':''}" onclick="toggleBibleEntry('${key}','${S.selectedBook} ${n}')">${n}</button>`;
+      }).join('')}
+      ${CHAPTERS[S.selectedBook]>40?`<input type="number" min="1" max="${CHAPTERS[S.selectedBook]}" value="${S.selectedChapter}" style="width:60px;padding:0 10px;border-radius:11px;border:0.5px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;height:44px;font-family:inherit;outline:none" onchange="const k=S.selectedBook+'-'+this.value;toggleBibleEntry(k,S.selectedBook+' '+this.value)">`:''}
     </div>
     <div class="wisdom-card">
       <div style="font-size:13px;font-weight:600;color:var(--text-sub);letter-spacing:0.5px;text-transform:uppercase">Daily Wisdom</div>
@@ -562,10 +583,11 @@ function renderBible(){
         <div><label>Proverbs</label><input type="number" id="prov-ch" min="1" max="31" value="${S.provCh}" class="text-input" style="padding:10px 12px" onchange="S.provCh=parseInt(this.value)||1"></div>
       </div>
       <div class="wisdom-btns">
-        <button class="wisdom-mark-btn ${isBibleLogged('Psalms-'+S.psalmCh)?'logged':''}" style="${isBibleLogged('Psalms-'+S.psalmCh)?'background:rgba(48,209,88,0.1);color:var(--green);border-color:rgba(48,209,88,0.3)':''}" onclick="S.psalmCh=parseInt(document.getElementById('psalm-ch').value)||S.psalmCh;toggleBibleEntry('Psalms-'+S.psalmCh,'Psalm '+S.psalmCh)">${isBibleLogged('Psalms-'+S.psalmCh)?'✓ Psalm '+S.psalmCh:'Psalm '+S.psalmCh}</button>
-        <button class="wisdom-mark-btn ${isBibleLogged('Proverbs-'+S.provCh)?'logged':''}" style="${isBibleLogged('Proverbs-'+S.provCh)?'background:rgba(48,209,88,0.1);color:var(--green);border-color:rgba(48,209,88,0.3)':''}" onclick="S.provCh=parseInt(document.getElementById('prov-ch').value)||S.provCh;toggleBibleEntry('Proverbs-'+S.provCh,'Proverbs '+S.provCh)">${isBibleLogged('Proverbs-'+S.provCh)?'✓ Proverbs '+S.provCh:'Proverbs '+S.provCh}</button>
+        <button class="wisdom-mark-btn" style="${isBibleLogged('Psalms-'+S.psalmCh)?'background:rgba(48,209,88,0.1);color:var(--green);border-color:rgba(48,209,88,0.3)':''}" onclick="S.psalmCh=parseInt(document.getElementById('psalm-ch').value)||S.psalmCh;toggleBibleEntry('Psalms-'+S.psalmCh,'Psalm '+S.psalmCh)">${isBibleLogged('Psalms-'+S.psalmCh)?'✓ Psalm '+S.psalmCh:'Psalm '+S.psalmCh}</button>
+        <button class="wisdom-mark-btn" style="${isBibleLogged('Proverbs-'+S.provCh)?'background:rgba(48,209,88,0.1);color:var(--green);border-color:rgba(48,209,88,0.3)':''}" onclick="S.provCh=parseInt(document.getElementById('prov-ch').value)||S.provCh;toggleBibleEntry('Proverbs-'+S.provCh,'Proverbs '+S.provCh)">${isBibleLogged('Proverbs-'+S.provCh)?'✓ Proverbs '+S.provCh:'Proverbs '+S.provCh}</button>
       </div>
-    </div>`:renderMCheyne(todayEntries)}
+    </div>`
+    :renderMCheyne(todayEntries)}
     ${todayEntries.length?`
     <div class="card" style="padding:18px 20px">
       <div style="font-size:12px;color:var(--text-sub);font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:12px">Today's Reading</div>
@@ -582,11 +604,13 @@ function renderMCheyne(todayEntries){
   </div>`;
 }
 
-// ── PROJECT LIST ──────────────────────────────────────────────────────
+// ── PROJECT LIST ──────────────────────────────────────────────────────────
 function renderProjectList(){
   return`<div class="fade-in">
-  <div class="top-pad"></div>
-  <div style="padding:4px 20px 20px"><div style="font-size:34px;font-weight:300;letter-spacing:-0.5px">Deep Work ◎</div><div style="font-size:13px;color:var(--text-sub);margin-top:4px">${S.projects.length} project${S.projects.length!==1?'s':''}</div></div>
+  ${navRow('Deep Work','home',false)}
+  <div style="padding:0 20px 8px">
+    <div style="font-size:13px;color:var(--text-sub)">${S.projects.length} project${S.projects.length!==1?'s':''}</div>
+  </div>
   ${S.projects.map(p=>{
     const pct=progressPct(p);const dist=(p.distractions||[]).length;
     const totalMins=p.tasks.reduce((a,t)=>a+(t.minutes||30),0);
@@ -607,58 +631,58 @@ function renderProjectList(){
   </div>`;
 }
 
-// ── PROJECT DETAIL ────────────────────────────────────────────────────
+// ── PROJECT DETAIL ────────────────────────────────────────────────────────
 function renderProjectDetail(){
   const p=getProject();if(!p){S.view='projectList';return renderProjectList()}
   const pct=progressPct(p);const dist=(p.distractions||[]).length;
   const totalMins=p.tasks.reduce((a,t)=>a+(t.minutes||30),0);
   const doneMins=p.tasks.filter(t=>t.done).reduce((a,t)=>a+(t.minutes||30),0);
-  const penaltyMins=(p.distractions||[]).length*5;
   return`<div class="fade-in">
-  <div class="back-row"><button class="back-btn" onclick="S.view='projectList';render()">‹</button><span class="back-title">${p.name}</span></div>
+  ${navRow(p.name,'projectList')}
   <div style="background:var(--surface);border-radius:20px;border:0.5px solid var(--border);padding:20px;margin:0 16px 16px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
       <div><div style="font-size:44px;font-weight:300;color:${progressColor(pct)};letter-spacing:-2px;line-height:1">${pct}%</div><div style="font-size:13px;color:var(--text-sub);margin-top:4px">complete</div></div>
       <div style="text-align:right">
         <div style="font-size:13px;color:var(--text-sub)">${Math.round(doneMins/60*10)/10}h of ${Math.round(totalMins/60*10)/10}h done</div>
-        ${dist>0?`<div style="font-size:13px;color:var(--red);margin-top:4px">⚡ ${dist} distraction${dist!==1?'s':''} (−${penaltyMins}min)</div>`:''}
+        ${dist>0?`<div style="font-size:13px;color:var(--red);margin-top:4px">⚡ ${dist} distraction${dist!==1?'s':''} (−${dist*5}min)</div>`:''}
       </div>
     </div>
     <div class="progress-track" style="height:10px">
       <div class="progress-fill" style="width:${pct}%;background:${progressColor(pct)};height:100%"></div>
       ${Array.from({length:Math.min(dist,12)},(_,i)=>`<div class="distraction-tick" style="left:${Math.min(95,(i+1)*(98/(dist+1)))}%"></div>`).join('')}
     </div>
-    ${dist>0?`<div style="margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)"><div style="font-size:11px;color:var(--text-sub);font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px">Recent Distractions</div>${(p.distractions||[]).slice(-3).reverse().map(d=>`<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-sub);padding:3px 0"><span>⚡ ${d.note||'Distraction'}</span><span>${d.time}</span></div>`).join('')}</div>`:''}
+    ${dist>0?`<div style="margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">
+      <div style="font-size:11px;color:var(--text-sub);font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px">Recent Distractions</div>
+      ${(p.distractions||[]).slice(-3).reverse().map(d=>`<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-sub);padding:3px 0"><span>⚡ ${d.note||'Distraction'}</span><span>${d.time}</span></div>`).join('')}
+    </div>`:''}
   </div>
   <div class="sec-label">Tasks</div>
   <div style="padding:0 16px">
     ${p.tasks.map(t=>`
     <div class="task-item">
-      <button class="task-check ${t.done?'done':''}" onclick="toggleTask(${t.id})">${t.done?'✓':''}</button>
+      <button class="task-check${t.done?' done':''}" onclick="toggleTask(${t.id})">${t.done?'✓':''}</button>
       <div style="flex:1">
         <div style="font-size:15px;color:${t.done?'var(--text-sub)':'var(--text)'};text-decoration:${t.done?'line-through':'none'}">${t.text}</div>
         <div class="task-meta">${t.minutes||30} min</div>
       </div>
       ${!t.done?`<button class="distraction-btn-sm" onclick="taskDistraction(${t.id})">⚡ distracted</button>`:''}
     </div>`).join('')}
-    <button class="add-dashed" style="margin-top:4px" onclick="S.activeProjectId=${p.id};showNewTaskSheet()">+ Add Task</button>
+    <button class="add-dashed" style="margin-top:4px" onclick="showNewTaskSheet()">+ Add Task</button>
   </div>
   </div>`;
 }
-
 function toggleTask(id){
   updateProject(p=>{
     const task=p.tasks.find(t=>t.id===id);
-    const newDone=!task?.done;
-    if(newDone)addLog('task','Completed: '+task?.text,'var(--green)');
+    if(!task?.done)addLog('task','Completed: '+task?.text,'var(--green)');
     return{...p,tasks:p.tasks.map(t=>t.id===id?{...t,done:!t.done}:t)};
   });
   render();
 }
-
 function taskDistraction(taskId){
   S.activeTaskId=taskId;
-  const note='Task distraction';
+  const task=getProject()?.tasks.find(t=>t.id===taskId);
+  const note='Distracted from: '+(task?.text||'task');
   updateProject(p=>({...p,distractions:[...(p.distractions||[]),{note,time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),taskId}]}));
   addLog('distraction','⚡ '+note,'var(--red)');
   S.timerSecs=600;S.timerRunning=true;S.timerDone=false;S.distractionNote=note;
@@ -671,25 +695,24 @@ function taskDistraction(taskId){
   },1000);
 }
 
-// ── DISTRACTION TIMER ─────────────────────────────────────────────────
+// ── DISTRACTION TIMER ─────────────────────────────────────────────────────
 function renderDistractionTimer(){
   const p=getProject();
   const task=p?.tasks.find(t=>t.id===S.activeTaskId);
-  const R=96,circ=2*Math.PI*R;
-  const pct=(600-S.timerSecs)/600;
+  const R=96,circ=2*Math.PI*R,pct=(600-S.timerSecs)/600;
   const col=S.timerDone?'var(--green)':'var(--red)';
-  const isFlashing=S.timerRunning&&!S.timerDone;
+  const flash=S.timerRunning&&!S.timerDone;
   return`<div class="fade-in">
-  <div class="back-row"><button class="back-btn" onclick="clearInterval(timerInterval);S.timerRunning=false;S.view=S.activeProjectId?'projectDetail':'home';render()">‹</button><span class="back-title">Distraction Mode</span></div>
+  ${navRow('Distraction Mode','projectDetail')}
   <div style="padding:0 20px 20px">
     ${task?`<div style="background:var(--surface2);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:14px;color:var(--text-sub)">Pausing: <span style="color:var(--text);font-weight:600">${task.text}</span></div>`:''}
-    <div style="background:var(--surface);border-radius:20px;border:0.5px solid ${isFlashing?'var(--red)':'var(--border)'};padding:30px 20px;margin-bottom:16px;${isFlashing?'animation:borderFlash 0.8s ease-in-out infinite':''}" id="timer-card">
+    <div style="background:var(--surface);border-radius:20px;border:0.5px solid ${flash?'var(--red)':'var(--border)'};padding:30px 20px;margin-bottom:16px${flash?';animation:borderPulse 0.8s ease-in-out infinite':''}">
       <div class="timer-wrap">
         <svg class="timer-svg" width="210" height="210">
           <circle cx="105" cy="105" r="${R}" fill="none" stroke="var(--surface2)" stroke-width="10"/>
           <circle id="timer-fill" cx="105" cy="105" r="${R}" fill="none" stroke="${col}" stroke-width="10"
             stroke-dasharray="${circ}" stroke-dashoffset="${circ-circ*pct}" stroke-linecap="round"
-            style="transition:stroke-dashoffset 1s linear${isFlashing?';animation:timerFlash 0.6s ease-in-out infinite':''}"/>
+            style="transition:stroke-dashoffset 1s linear${flash?';animation:timerFlash 0.6s ease-in-out infinite':''}"/>
         </svg>
         <div class="timer-center">
           <div id="timer-number" class="timer-num" style="color:${col}">${fmt(S.timerSecs)}</div>
@@ -698,19 +721,21 @@ function renderDistractionTimer(){
       </div>
     </div>
     <input id="distraction-note" class="text-input" placeholder="What distracted you?" value="${S.distractionNote}" style="margin-bottom:16px" oninput="S.distractionNote=this.value">
-    ${!S.timerDone?`<div style="display:flex;gap:10px">
-      <button class="btn-record ${S.timerRunning?'recording':''}" onclick="${S.timerRunning?'pauseTimerBtn()':'resumeTimerBtn()'}" style="flex:1">
+    ${!S.timerDone?`
+    <div style="display:flex;gap:10px">
+      <button class="btn-record${S.timerRunning?' recording':''}" onclick="${S.timerRunning?'pauseTimerBtn()':'resumeTimerBtn()'}" style="flex:1">
         <span>${S.timerRunning?'⏸ Pause':'▶ Resume'}</span>
       </button>
-      <button onclick="finishDistraction()" style="flex:1;padding:16px;border-radius:16px;background:var(--green);border:none;color:#000;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">Back ✓</button>
-    </div>`:
-    `<button onclick="finishDistraction()" class="btn-primary" style="background:var(--green);color:#000">✓ Back to Work</button>
-    <div style="text-align:center;margin-top:18px;font-size:15px;font-style:italic;color:var(--text-sub)">Refocus and finish strong.</div>`}
+      <button onclick="finishDistraction()" style="flex:1;padding:16px;border-radius:16px;background:var(--green);border:none;color:#000;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">Back to Work ✓</button>
+    </div>`:`
+    <button onclick="finishDistraction()" class="btn-primary" style="background:var(--green);color:#000">✓ Back to Work</button>
+    <div style="text-align:center;margin-top:18px;font-size:15px;font-style:italic;color:var(--text-sub)">Refocus and finish strong. 🙏</div>`}
   </div></div>`;
 }
 function pauseTimerBtn(){S.timerRunning=false;clearInterval(timerInterval);render()}
 function resumeTimerBtn(){
   S.timerRunning=true;
+  clearInterval(timerInterval);
   timerInterval=setInterval(()=>{
     S.timerSecs--;
     if(S.timerSecs<=0){S.timerSecs=0;S.timerRunning=false;S.timerDone=true;clearInterval(timerInterval);}
@@ -723,15 +748,15 @@ function finishDistraction(){
   S.view=S.activeProjectId?'projectDetail':'home';render();
 }
 
-// ── ACTIVITY LOG ──────────────────────────────────────────────────────
+// ── ACTIVITY LOG ──────────────────────────────────────────────────────────
 function renderLog(){
   const grouped={};
   S.activityLog.forEach(e=>{if(!grouped[e.date])grouped[e.date]=[];grouped[e.date].push(e)});
   const dates=Object.keys(grouped).sort().reverse();
-  const typeIcon={journal:'✍️',bible:'📖','bible-unlog':'↩️',script:'🎬',project:'📁',task:'✓',distraction:'⚡'};
+  const icons={journal:'✍️',bible:'📖','bible-unlog':'↩️',script:'🎬',project:'📁',task:'✅',distraction:'⚡'};
   return`<div class="fade-in">
-  <div class="back-row"><button class="back-btn" onclick="S.view='home';render()">‹</button><span class="back-title">Activity Log</span></div>
-  ${S.activityLog.length===0?`<div style="text-align:center;padding:60px 20px;color:var(--text-sub)"><div style="font-size:32px;margin-bottom:12px">📋</div><div>No activity yet.<br>Start your morning routine!</div></div>`:''}
+  ${navRow('Activity Log','home',false)}
+  ${S.activityLog.length===0?`<div style="text-align:center;padding:60px 20px;color:var(--text-sub)"><div style="font-size:36px;margin-bottom:12px">📋</div><div style="line-height:1.6">No activity yet.<br>Start your morning routine!</div></div>`:''}
   ${dates.map(date=>{
     const label=new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
     return`<div>
@@ -739,36 +764,26 @@ function renderLog(){
       <div style="margin:0 16px;background:var(--surface);border-radius:18px;border:0.5px solid var(--border);overflow:hidden">
         ${grouped[date].map(e=>`<div class="log-item">
           <div class="log-dot" style="background:${e.color||'var(--text-sub)'}"></div>
-          <div class="log-body">
-            <div class="log-title">${typeIcon[e.type]||'•'} ${e.label}</div>
+          <div style="flex:1">
+            <div class="log-title">${icons[e.type]||'•'} ${e.label}</div>
             <div class="log-time">${e.time}</div>
           </div>
         </div>`).join('')}
       </div>
     </div>`;
   }).join('')}
+  <div style="height:20px"></div>
   </div>`;
 }
 
-// ── Attach listeners ──────────────────────────────────────────────────
-function attachListeners(){
-  const ta=document.getElementById('journal-ta');
-  if(ta)ta.addEventListener('input',()=>{S.journalText=ta.value});
-}
-
-// ── Boot ──────────────────────────────────────────────────────────────
+// ── Boot ──────────────────────────────────────────────────────────────────
 load();render();
 
-// ── Service Worker for offline ────────────────────────────────────────
+// ── Offline service worker ────────────────────────────────────────────────
 if('serviceWorker' in navigator){
-  const swCode=`
-    const CACHE='morning-v2';
-    self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['.']))));
-    self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('.')))));
-  `;
-  const blob=new Blob([swCode],{type:'application/javascript'});
-  const url=URL.createObjectURL(blob);
-  navigator.serviceWorker.register(url).catch(()=>{});
+  const sw=`const C='mdw-v3';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['.']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('.')))))`;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
 }
 </script>
 </body>
