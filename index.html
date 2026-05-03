@@ -389,7 +389,7 @@ function quickLogDistraction(){
 
 // ── Claude API ────────────────────────────────────────────────────────────
 async function callClaude(system,user){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system,messages:[{role:'user',content:user}]})});
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system,messages:[{role:'user',content:user}]})});
   const d=await r.json();
   return(d.content||[]).map(b=>b.text||'').join('\n');
 }
@@ -440,9 +440,28 @@ async function generateScript(){
   if(!text.trim()){alert('Please write or record your journal entry first.');return}
   S.scriptLoading=true;S.script='';S.view='script';save();render();
   try{
+    const systemPrompt = `You are helping a 55-year-old regular guy named Bill create YouTube devotional scripts from his raw morning journal entries. Bill is not trying to be a preacher — he is a guy who has lived his whole life his own way, grew up around ministry, and is finally at a point where he just wants to do what God has for him. He talks with people, not at them. He is honest, a little raw, self-aware, and grace-forward. His whole message is essentially: I have wasted a lot of time, I am in the process of change, and if you are there too — you are not alone.
+
+When converting his journal entry into scripts, follow these rules strictly:
+
+1. Fix grammar, punctuation, and run-on sentences — but never change his words to sound more polished, flowery, or like AI wrote it. If he says look or I am not gonna lie or here is the thing — keep it.
+
+2. Protect people — if he mentions anyone by name or confesses something very specific about a relationship or personal failure, quietly generalize it. My sister Sarah becomes someone close to me. A specific confession becomes a universal struggle. Do this silently — no notes, no brackets, no calling attention to it.
+
+3. Shift the lens — move the focus from here is my specific sin to here is where I am in the process and you might be there too. Keep the vulnerability. Redirect it outward toward the audience.
+
+4. Scripture accuracy — if Bill is clearly directly quoting a scripture (e.g. he references a specific verse and then quotes it word for word), verify it against the King James Version and correct it silently if it is slightly off. Keep KJV wording exactly as written — do not modernize it. However if Bill is paraphrasing scripture in his own words to explain or apply it, leave it as he said it — that is intentional and part of his voice.
+
+5. Connect to Scripture — weave any Bible passages or stories naturally into the narrative the way a regular guy would explain it to a friend, not a sermon.
+
+6. Two versions, one output:
+   - Under a header — FULL VERSION (10-12 min) — write a full spoken word script at conversational speaking pace
+   - Under a header — 60-SECOND VERSION — write a punchy, personal short that captures the single biggest moment or insight from the entry
+
+7. Both versions should sound like something Bill would actually say out loud — not read from a page.`;
     S.script=await callClaude(
-      'You are a thoughtful Christian content creator who turns personal devotional journal entries into warm, conversational YouTube scripts. Feel authentic, not preachy. Structure: Hook (15s), Personal story/reading (45s), Key insight (60s), Viewer application (30s), Call to action (15s). Use natural spoken language. Include [PAUSE] markers and [B-ROLL: description] suggestions. 3–4 minutes when read aloud.',
-      'Turn this devotional journal entry into a YouTube script:\n\n'+text
+      systemPrompt,
+      'Here is my raw journal entry. Please turn it into the two YouTube scripts:\n\n'+text
     );
     addLog('script','YouTube script generated','var(--accent)');
   }catch(e){S.script='Error generating script. Check your connection and try again.'}
@@ -552,7 +571,11 @@ function renderScript(){
   ${navRow('YouTube Script','journal')}
   <div style="padding:0 16px 20px">
     <button class="copy-btn" id="copy-btn" onclick="copyScript()">📋 Copy Script</button>
-    <div class="script-body">${S.script.replace(/</g,'&lt;').replace(/\[([^\]]+)\]/g,'<span style="color:var(--accent);font-style:italic">[$1]</span>')}</div>
+    <div class="script-body">${S.script
+      .replace(/</g,'&lt;')
+      .replace(/— FULL VERSION \(10-12 min\) —/g,'<div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;padding:8px 0 16px;border-top:0.5px solid var(--border);margin-top:8px">— FULL VERSION (10–12 MIN) —</div>')
+      .replace(/— 60-SECOND VERSION —/g,'<div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;padding:24px 0 16px;border-top:0.5px solid var(--border);margin-top:16px">— 60-SECOND VERSION —</div>')
+    }</div>
   </div></div>`;
 }
 
