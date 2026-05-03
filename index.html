@@ -389,8 +389,21 @@ function quickLogDistraction(){
 
 // ── Claude API ────────────────────────────────────────────────────────────
 async function callClaude(system,user){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system,messages:[{role:'user',content:user}]})});
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system,messages:[{role:'user',content:user}]})
+  });
+  if(!r.ok){
+    const err=await r.json().catch(()=>({error:{message:'HTTP '+r.status}}));
+    throw new Error(err?.error?.message||'HTTP '+r.status);
+  }
   const d=await r.json();
+  if(d.error) throw new Error(d.error.message||'API error');
   return(d.content||[]).map(b=>b.text||'').join('\n');
 }
 
@@ -464,7 +477,7 @@ When converting his journal entry into scripts, follow these rules strictly:
       'Here is my raw journal entry. Please turn it into the two YouTube scripts:\n\n'+text
     );
     addLog('script','YouTube script generated','var(--accent)');
-  }catch(e){S.script='Error generating script. Check your connection and try again.'}
+  }catch(e){S.script='Error: '+e.message+'. Please check your connection and try again.'}
   S.scriptLoading=false;render();
 }
 function copyScript(){
